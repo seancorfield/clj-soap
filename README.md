@@ -9,25 +9,26 @@ This version is updated from Tetsuya Takatsuru's version to use Clojure 1.4.0 (a
 ### Client
 
 You can call remote SOAP method as following:
+```clojure
+(require '[clj-soap.core :as soap])
 
-  (require '[clj-soap.core :as soap])
-  (let [client (soap/client-fn "http://... (URL for WSDL)")]
-    (client :someMethod param1 param2 ...))
-
+(let [client (soap/client-fn "http://... (URL for WSDL)")]
+  (client :someMethod param1 param2 ...))
+```
 ### Server
 
 To make SOAP service:
+```clojure
+(require '[clj-soap.core :as soap])
 
-  (require '[clj-soap.core :as soap])
-
-  ;; Defining service class
-  (soap/defservice my.some.SoapClass
-    (someMethod ^String [^Integer x ^String s]
+;; Defining service class
+(soap/defservice my.some.SoapClass
+  (someMethod ^String [^Integer x ^String s]
               (str "x is " x "\ts is " s)))
 
-  ;; Start SOAP Service
-  (serve "my.some.SoapClass")
-
+;; Start SOAP Service
+(serve "my.some.SoapClass")
+```
 `defservice` needs to be AOT-compiled.
 For example, `lein compile` before running server.
 
