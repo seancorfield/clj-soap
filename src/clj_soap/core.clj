@@ -95,7 +95,7 @@
 (defmethod obj->soap-str :double [obj argtype] (str obj))
 (defmethod obj->soap-str :string [obj argtype] (str obj))
 (defmethod obj->soap-str :boolean [obj argtype] (str obj))
-(defmethod obj->soap-str :anyType [obj argtype] (str obj))
+(defmethod obj->soap-str :default [obj argtype] (str obj))
 
 (defmulti soap-str->obj (fn [obj argtype] argtype))
 
@@ -103,7 +103,7 @@
 (defmethod soap-str->obj :double [soap-str argtype] (Double/parseDouble soap-str))
 (defmethod soap-str->obj :string [soap-str argtype] soap-str)
 (defmethod soap-str->obj :boolean [soap-str argtype] (Boolean/parseBoolean soap-str))
-(defmethod soap-str->obj :anyType [soap-str argtype] soap-str)
+(defmethod soap-str->obj :default [soap-str argtype] soap-str)
 
 (defn make-client [url]
   (doto (org.apache.axis2.client.ServiceClient. nil (java.net.URL. url) nil nil)
@@ -120,13 +120,15 @@
     (doseq [[argval argtype] (map list args op-args)]
       (.addChild request
                  (doto (.createOMElement
-                         factory (javax.xml.namespace.QName. (:name argtype)))
+                         factory (javax.xml.namespace.QName. (axis-op-namespace op) (:name argtype)))
                    (.setText (obj->soap-str argval (:type argtype))))))
     request))
 
 (defn get-result [op retelem]
   (let [ret-str (.getText (first (iterator-seq (.getChildElements retelem))))]
-    (soap-str->obj ret-str (axis-op-rettype op))))
+    (if (not (empty? ret-str))
+      (soap-str->obj ret-str (axis-op-rettype op))
+      (str retelem))))
 
 (defn client-call [client op & args]
   (if (isa? (class op) org.apache.axis2.description.OutOnlyAxisOperation)
