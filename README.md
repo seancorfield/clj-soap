@@ -35,7 +35,7 @@ For example, `lein compile` before running server.
 #### Type Hint
 
 SOAP services need typehints.
-`String` for arguments nad `void` for return value,
+`String` for arguments and `void` for return value,
 if you don't specify typehints.
 
 ## License
