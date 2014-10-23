@@ -1,3 +1,9 @@
+# THIS PROJECT IS NO LONGER MAINTAINED!
+
+I forked it purely to get it running on Clojure 1.3 and then found it didn't do what I needed anyway.
+
+If you think it might be useful to you, please fork it and maintain it yourself. If you decide to take over as lead maintainer, let me know and I'll update this readme to point to your new fork.
+
 # clj-soap
 
 clj-soap is SOAP server and client using Apache Axis2.
